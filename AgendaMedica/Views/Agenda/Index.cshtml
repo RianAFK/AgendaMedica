@@ -4,12 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
+<div class="container text-light mt-5">
+    <h1 class="text-center display-5"><span class="fw-bold">Agendamentos</span></h1>
 <p>
-    <a asp-action="Create">Create New</a>
+        <a asp-action="Create" class="btn btn-outline-light bth-lg w-25 bg-dark text-white">Adicionar Novo Agendamento</a>
 </p>
-<table class="table">
+<table class="table table-dark table-striped table-borderless">
     <thead>
         <tr>
             <th>
@@ -31,10 +31,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Paciente.PacienteID)
+                @Html.DisplayFor(modelItem => item.Paciente.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Medico.MedicoId)
+                @Html.DisplayFor(modelItem => item.Medico.Nome)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DataConsulta)
@@ -43,11 +43,17 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.AgendaId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AgendaId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AgendaId">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.AgendaId"
+                           class="btn btn-sm btn-warning me-2 d-inline-flex align-items-center">
+                            Editar
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.AgendaId"
+                           class="btn btn-sm btn-danger d-inline-flex align-items-center">
+                            Deletar
+                        </a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>

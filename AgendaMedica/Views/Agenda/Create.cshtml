@@ -3,44 +3,42 @@
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
-<h4>Agenda</h4>
+<div class="d-inline-block col-md-4 bg-dark text-white py-2 rounded-3">
+    <h1 class="ms-3 text-white">Criar Agendamento</h1>
+</div>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<div class="col-md-4 bg-dark text-white p-4 rounded-3">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="PacienteId" class="control-label"></label>
-                <select asp-for="PacienteId" class ="form-control" asp-items="ViewBag.PacienteId"></select>
+                <label asp-for="PacienteId" class="control-label text-white">Paciente</label>
+                <select asp-for="PacienteId" class="form-control w-100" asp-items="ViewBag.PacienteId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="MedicoId" class="control-label"></label>
-                <select asp-for="MedicoId" class ="form-control" asp-items="ViewBag.MedicoId"></select>
+                <label asp-for="MedicoId" class="control-label text-white">Medico</label>
+                <select asp-for="MedicoId" class="form-control w-100" asp-items="ViewBag.MedicoId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="DataConsulta" class="control-label"></label>
-                <input asp-for="DataConsulta" class="form-control" />
+                <label asp-for="DataConsulta" class="control-label text-white"></label>
+                <input asp-for="DataConsulta" class="form-control w-100" />
                 <span asp-validation-for="DataConsulta" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+                <label asp-for="Status" class="control-label text-white"></label>
+                <input asp-for="Status" class="form-control w-100" />
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group py-2">
+                <input type="submit" value="Criar Agendamento" class="btn btn-primary" />
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="mt-2">
+    <a asp-action="Index" class="text-white text-decoration-none bg-secondary py-2 px-2 rounded-2">Voltar para Agenda</a>
 </div>
-
+</div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

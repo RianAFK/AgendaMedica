@@ -10,23 +10,23 @@ using AgendaMedica.Models;
 
 namespace AgendaMedica.Controllers
 {
-    public class AgendaController : Controller
+    public class MedicosController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AgendaController(ApplicationDbContext context)
+        public MedicosController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Agenda
+        // GET: Medicos
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Agenda.Include(a => a.Medico).Include(a => a.Paciente);
+            var applicationDbContext = _context.Medicos.Include(m => m.Especialidade);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Agenda/Details/5
+        // GET: Medicos/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,46 +34,43 @@ namespace AgendaMedica.Controllers
                 return NotFound();
             }
 
-            var agenda = await _context.Agenda
-                .Include(a => a.Medico)
-                .Include(a => a.Paciente)
-                .FirstOrDefaultAsync(m => m.AgendaId == id);
-            if (agenda == null)
+            var medico = await _context.Medicos
+                .Include(m => m.Especialidade)
+                .FirstOrDefaultAsync(m => m.MedicoId == id);
+            if (medico == null)
             {
                 return NotFound();
             }
 
-            return View(agenda);
+            return View(medico);
         }
 
-        // GET: Agenda/Create
+        // GET: Medicos/Create
         public IActionResult Create()
         {
-            ViewData["MedicoId"] = new SelectList(_context.Medicos, "MedicoId", "Nome");
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "PacienteID", "Nome");
+            ViewData["EspecialidadeId"] = new SelectList(_context.Especialidades, "EspecialidadeId", "Nome");
             return View();
         }
 
-        // POST: Agenda/Create
+        // POST: Medicos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AgendaId,PacienteId,MedicoId,DataConsulta,Status")] Agenda agenda)
+        public async Task<IActionResult> Create([Bind("MedicoId,Nome,CRM,Celular,EspecialidadeId")] Medico medico)
         {
             if (ModelState.IsValid)
             {
-                agenda.AgendaId = Guid.NewGuid();
-                _context.Add(agenda);
+                medico.MedicoId = Guid.NewGuid();
+                _context.Add(medico);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MedicoId"] = new SelectList(_context.Medicos, "MedicoId", "Nome", agenda.MedicoId);
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "PacienteID", "Nome", agenda.PacienteId);
-            return View(agenda);
+            ViewData["EspecialidadeId"] = new SelectList(_context.Especialidades, "EspecialidadeId", "Nome", medico.EspecialidadeId);
+            return View(medico);
         }
 
-        // GET: Agenda/Edit/5
+        // GET: Medicos/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -81,24 +78,23 @@ namespace AgendaMedica.Controllers
                 return NotFound();
             }
 
-            var agenda = await _context.Agenda.FindAsync(id);
-            if (agenda == null)
+            var medico = await _context.Medicos.FindAsync(id);
+            if (medico == null)
             {
                 return NotFound();
             }
-            ViewData["MedicoId"] = new SelectList(_context.Medicos, "MedicoId", "Nome", agenda.MedicoId);
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "PacienteID", "Nome", agenda.PacienteId);
-            return View(agenda);
+            ViewData["EspecialidadeId"] = new SelectList(_context.Especialidades, "EspecialidadeId", "Nome", medico.EspecialidadeId);
+            return View(medico);
         }
 
-        // POST: Agenda/Edit/5
+        // POST: Medicos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("AgendaId,PacienteId,MedicoId,DataConsulta,Status")] Agenda agenda)
+        public async Task<IActionResult> Edit(Guid id, [Bind("MedicoId,Nome,CRM,Celular,EspecialidadeId")] Medico medico)
         {
-            if (id != agenda.AgendaId)
+            if (id != medico.MedicoId)
             {
                 return NotFound();
             }
@@ -107,12 +103,12 @@ namespace AgendaMedica.Controllers
             {
                 try
                 {
-                    _context.Update(agenda);
+                    _context.Update(medico);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AgendaExists(agenda.AgendaId))
+                    if (!MedicoExists(medico.MedicoId))
                     {
                         return NotFound();
                     }
@@ -123,12 +119,11 @@ namespace AgendaMedica.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MedicoId"] = new SelectList(_context.Medicos, "MedicoId", "Nome", agenda.MedicoId);
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "PacienteID", "Nome", agenda.PacienteId);
-            return View(agenda);
+            ViewData["EspecialidadeId"] = new SelectList(_context.Especialidades, "EspecialidadeId", "Nome", medico.EspecialidadeId);
+            return View(medico);
         }
 
-        // GET: Agenda/Delete/5
+        // GET: Medicos/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -136,36 +131,35 @@ namespace AgendaMedica.Controllers
                 return NotFound();
             }
 
-            var agenda = await _context.Agenda
-                .Include(a => a.Medico)
-                .Include(a => a.Paciente)
-                .FirstOrDefaultAsync(m => m.AgendaId == id);
-            if (agenda == null)
+            var medico = await _context.Medicos
+                .Include(m => m.Especialidade)
+                .FirstOrDefaultAsync(m => m.MedicoId == id);
+            if (medico == null)
             {
                 return NotFound();
             }
 
-            return View(agenda);
+            return View(medico);
         }
 
-        // POST: Agenda/Delete/5
+        // POST: Medicos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var agenda = await _context.Agenda.FindAsync(id);
-            if (agenda != null)
+            var medico = await _context.Medicos.FindAsync(id);
+            if (medico != null)
             {
-                _context.Agenda.Remove(agenda);
+                _context.Medicos.Remove(medico);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AgendaExists(Guid id)
+        private bool MedicoExists(Guid id)
         {
-            return _context.Agenda.Any(e => e.AgendaId == id);
+            return _context.Medicos.Any(e => e.MedicoId == id);
         }
     }
 }

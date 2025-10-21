@@ -1,0 +1,58 @@
+﻿@model IEnumerable<AgendaMedica.Models.Medico>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-light text-center display-5"><span class="fw-bold">Médicos</span></h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-outline-light bth-lg w-25 bg-dark text-white">Adicionar Novo Médico</a>
+</p>
+<table class="table bg-dark text-white">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CRM)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Celular)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Especialidade)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CRM)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Celular)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Especialidade.Nome)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.MedicoId"
+                       class="btn btn-sm btn-warning me-2 d-inline-flex align-items-center">
+                        Editar
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.MedicoId"
+                       class="btn btn-sm btn-danger d-inline-flex align-items-center">
+                        Deletar
+                    </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
